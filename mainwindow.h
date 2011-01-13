@@ -31,6 +31,7 @@ public slots:
 
 
 private slots:
+    void on_stopButton_clicked();
     void on_startButton_clicked();
 
 private:

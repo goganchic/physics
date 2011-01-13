@@ -7,6 +7,15 @@ StorageThread::StorageThread(int bs, QObject *parent) :
     this->moveToThread(this);
 }
 
+StorageThread::~StorageThread()
+{
+    while (blocks.size() > 0)
+    {
+        delete[] blocks[0];
+        blocks.remove(0);
+    }
+}
+
 void StorageThread::cacheRawData()
 {
     qDebug() << "Allocate memory";
@@ -26,10 +35,11 @@ void StorageThread::callProcessorIfRequired()
     }
 }
 
-void StorageThread::notifyAboutReadyProcessor()
+void StorageThread::notifyAboutReadyProcessor(double avg)
 {
     qDebug() << "deallocate memory";
     delete[] blocks[0];
     blocks.remove(0);
+    avgs.push_back(avg);
     callProcessorIfRequired();
 }

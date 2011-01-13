@@ -32,11 +32,38 @@ void MainWindow::on_startButton_clicked()
     processor = new ProcessorThread(block_size);
 
     connect(generator, SIGNAL(newDataGenerated()), storage, SLOT(cacheRawData()));
-    connect(processor, SIGNAL(dataProcessed(double)), storage, SLOT(notifyAboutReadyProcessor()));
+    connect(processor, SIGNAL(dataProcessed(double)), storage, SLOT(notifyAboutReadyProcessor(double)));
     connect(storage, SIGNAL(storageBlockReady(int*)), processor, SLOT(processData(int*)));
     connect(processor, SIGNAL(dataProcessed(double)), this, SLOT(newPointArrived(double)));
+
+    xs.clear();
+    ys.clear();
 
     processor->start();
     storage->start();
     generator->start();
+
+    ui->startButton->setDisabled(true);
+    ui->stopButton->setDisabled(false);
+}
+
+void MainWindow::on_stopButton_clicked()
+{
+    generator->stop();
+    generator->wait();
+    disconnect(generator, SIGNAL(newDataGenerated()), storage, SLOT(cacheRawData()));
+    processor->quit();
+    processor->wait();
+    disconnect(processor, SIGNAL(dataProcessed(double)), storage, SLOT(notifyAboutReadyProcessor(double)));
+    disconnect(storage, SIGNAL(storageBlockReady(int*)), processor, SLOT(processData(int*)));
+    disconnect(processor, SIGNAL(dataProcessed(double)), this, SLOT(newPointArrived(double)));
+    storage->quit();
+    processor->wait();
+
+    delete generator;
+    delete processor;
+    delete storage;
+
+    ui->startButton->setDisabled(false);
+    ui->stopButton->setDisabled(true);
 }

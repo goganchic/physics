@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>400</width>
-    <height>300</height>
+    <width>522</width>
+    <height>439</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -16,7 +16,7 @@
   <widget class="QWidget" name="centralWidget">
    <layout class="QVBoxLayout" name="verticalLayout">
     <item>
-     <widget class="QwtPlot" name="plot" native="true">
+     <widget class="QwtPlot" name="plot">
       <property name="sizePolicy">
        <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
         <horstretch>0</horstretch>
@@ -26,17 +26,41 @@
      </widget>
     </item>
     <item>
-     <layout class="QHBoxLayout" name="horizontalLayout">
-      <item>
+     <layout class="QGridLayout" name="gridLayout">
+      <item row="0" column="0">
+       <widget class="QLabel" name="label">
+        <property name="text">
+         <string>Block size</string>
+        </property>
+       </widget>
+      </item>
+      <item row="0" column="1">
        <widget class="QLineEdit" name="blockSizeEdit"/>
       </item>
-      <item>
-       <widget class="QLineEdit" name="intervalEdit"/>
-      </item>
-      <item>
+      <item row="0" column="2">
        <widget class="QPushButton" name="startButton">
         <property name="text">
          <string>Start</string>
+        </property>
+       </widget>
+      </item>
+      <item row="1" column="0">
+       <widget class="QLabel" name="label_2">
+        <property name="text">
+         <string>Generation interval</string>
+        </property>
+       </widget>
+      </item>
+      <item row="1" column="1">
+       <widget class="QLineEdit" name="intervalEdit"/>
+      </item>
+      <item row="1" column="2">
+       <widget class="QPushButton" name="stopButton">
+        <property name="enabled">
+         <bool>false</bool>
+        </property>
+        <property name="text">
+         <string>Stop</string>
         </property>
        </widget>
       </item>
@@ -49,8 +73,8 @@
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>400</width>
-     <height>23</height>
+     <width>522</width>
+     <height>25</height>
     </rect>
    </property>
   </widget>
@@ -68,8 +92,8 @@
  <customwidgets>
   <customwidget>
    <class>QwtPlot</class>
-   <extends>QWidget</extends>
-   <header location="global">qwt_plot.h</header>
+   <extends>QFrame</extends>
+   <header>qwt_plot.h</header>
    <container>1</container>
   </customwidget>
  </customwidgets>

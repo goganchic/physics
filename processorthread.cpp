@@ -22,5 +22,5 @@ void ProcessorThread::processData(int *ptr)
     result = result / block_size;
 
     emit dataProcessed(result);
-    emit processorReady();
+    emit processorReady(result);
 }

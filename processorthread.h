@@ -13,7 +13,7 @@ protected:
     void run();
 
 signals:
-    void processorReady();
+    void processorReady(double avg);
     void dataProcessed(double res);
 
 public slots:

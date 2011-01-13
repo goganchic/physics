@@ -13,15 +13,17 @@ class StorageThread : public QThread
     Q_OBJECT
 public:
     explicit StorageThread(int bs, QObject *parent = 0);
+    ~StorageThread();
 
 signals:
     void storageBlockReady(int *ptr);
 public slots:
     void cacheRawData();
-    void notifyAboutReadyProcessor();
+    void notifyAboutReadyProcessor(double avg);
 
 private:
     QVector<int*> blocks;
+    QVector<double> avgs;
     int processor_state;
     int block_size;
 
