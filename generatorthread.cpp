@@ -11,15 +11,15 @@ void GeneratorThread::run()
 {
     while (true)
     {
-        QMutexLocker locker(&mutex);
+        mutex.lock();
         if (shouldStop)
         {
-            locker.unlock();
+            mutex.unlock();
             return;
         }
         else
         {
-            locker.unlock();
+            mutex.unlock();
         }
 
         emit newDataGenerated();
@@ -31,5 +31,4 @@ void GeneratorThread::stop()
 {
     QMutexLocker locker(&mutex);
     shouldStop = true;
-    locker.unlock();
 }

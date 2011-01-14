@@ -52,13 +52,14 @@ void MainWindow::on_stopButton_clicked()
     generator->stop();
     generator->wait();
     disconnect(generator, SIGNAL(newDataGenerated()), storage, SLOT(cacheRawData()));
+
     processor->quit();
     processor->wait();
     disconnect(processor, SIGNAL(dataProcessed(double)), storage, SLOT(notifyAboutReadyProcessor(double)));
     disconnect(storage, SIGNAL(storageBlockReady(int*)), processor, SLOT(processData(int*)));
     disconnect(processor, SIGNAL(dataProcessed(double)), this, SLOT(newPointArrived(double)));
     storage->quit();
-    processor->wait();
+    storage->wait();
 
     delete generator;
     delete processor;
