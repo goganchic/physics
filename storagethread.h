@@ -19,11 +19,10 @@ signals:
     void storageBlockReady(int *ptr);
 public slots:
     void cacheRawData();
-    void notifyAboutReadyProcessor(double avg);
+    void notifyAboutReadyProcessor();
 
 private:
     QVector<int*> blocks;
-    QVector<double> avgs;
     int processor_state;
     int block_size;
 

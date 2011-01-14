@@ -1,5 +1,4 @@
 #include "storagethread.h"
-#include <QDebug>
 
 StorageThread::StorageThread(int bs, QObject *parent) :
     QThread(parent), processor_state(PROCESSOR_READY), block_size(bs)
@@ -18,12 +17,11 @@ StorageThread::~StorageThread()
 
 void StorageThread::cacheRawData()
 {
-    qDebug() << "Allocate memory";
-    int *block = new int[block_size];
+    // block_size * 2 = size for t1 + size for t2
+    int *block = new int[block_size * 2];
     // TODO copy data
     blocks.push_back(block);
 
-    // TODO: if processor is ready - send signal to process new data
     callProcessorIfRequired();
 }
 
@@ -35,11 +33,9 @@ void StorageThread::callProcessorIfRequired()
     }
 }
 
-void StorageThread::notifyAboutReadyProcessor(double avg)
+void StorageThread::notifyAboutReadyProcessor()
 {
-    qDebug() << "deallocate memory";
     delete[] blocks[0];
     blocks.remove(0);
-    avgs.push_back(avg);
     callProcessorIfRequired();
 }

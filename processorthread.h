@@ -7,20 +7,22 @@ class ProcessorThread : public QThread
 {
     Q_OBJECT
 public:
-    explicit ProcessorThread(int bs, QObject *parent = 0);
+    explicit ProcessorThread(int bs, int t_1, int t_2, QObject *parent = 0);
 
 protected:
     void run();
 
 signals:
-    void processorReady(double avg);
-    void dataProcessed(double res);
+    void processorReady();
+    void dataProcessed(double res1, double res2, double res3, double t);
 
 public slots:
     void processData(int *ptr);
 
 private:
     int block_size;
+    int t1;
+    int t2;
 
 };
 

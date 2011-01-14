@@ -22,12 +22,21 @@ public:
 
 private:
     Ui::MainWindow *ui;
-    QwtPlotCurve avgCurve;
-    QVector<double> xs;
-    QVector<double> ys;
+    QwtPlotCurve avgCurve1;
+    QwtPlotCurve avgCurve2;
+    QwtPlotCurve avgCurve3;
+    QwtPlotCurve tCurve;
+    QVector<double> xs1;
+    QVector<double> ys1;
+    QVector<double> xs2;
+    QVector<double> ys2;
+    QVector<double> xs3;
+    QVector<double> ys3;
+    QVector<double> xst;
+    QVector<double> yst;
 
 public slots:
-    void newPointArrived(double res);
+    void newPointArrived(double res1, double res2, double res3, double t);
 
 
 private slots:
