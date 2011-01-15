@@ -82,4 +82,5 @@ void ResultsTableModel::setData(QVector<double> &new_x1, QVector<double> &new_x2
     x3 = new_x3;
     mt = new_mt;
     dt = new_dt;
+    emit layoutChanged();
 }
