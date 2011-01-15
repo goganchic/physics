@@ -7,6 +7,7 @@
 #include "generatorthread.h"
 #include "processorthread.h"
 #include "storagethread.h"
+#include "resultswindow.h"
 
 namespace Ui {
     class MainWindow;
@@ -37,6 +38,7 @@ private:
     QVector<double> ysmt;
     QVector<double> xsdt;
     QVector<double> ysdt;
+    ResultsWindow resultsWindow;
 
 public slots:
     void newPointArrived(double res1, double res2, double res3, double mt, double dt);

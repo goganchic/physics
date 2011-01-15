@@ -9,7 +9,8 @@ MainWindow::MainWindow(QWidget *parent) :
     avgCurve2("AVG(t2)"),
     avgCurve3("AVG(t1 + t2)"),
     mtCurve("MT"),
-    dtCurve("DT")
+    dtCurve("DT"),
+    resultsWindow(this)
 {
     ui->setupUi(this);
 
@@ -128,4 +129,7 @@ void MainWindow::on_stopButton_clicked()
 
     ui->startButton->setDisabled(false);
     ui->stopButton->setDisabled(true);
+
+    resultsWindow.setData(ys1, ys2, ys3, ysmt, ysdt);
+    resultsWindow.show();
 }

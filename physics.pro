@@ -16,11 +16,16 @@ SOURCES += main.cpp\
         mainwindow.cpp \
     generatorthread.cpp \
     storagethread.cpp \
-    processorthread.cpp
+    processorthread.cpp \
+    resultswindow.cpp \
+    resultstablemodel.cpp
 
 HEADERS  += mainwindow.h \
     generatorthread.h \
     storagethread.h \
-    processorthread.h
+    processorthread.h \
+    resultswindow.h \
+    resultstablemodel.h
 
-FORMS    += mainwindow.ui
+FORMS    += mainwindow.ui \
+    resultswindow.ui
