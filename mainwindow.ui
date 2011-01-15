@@ -6,7 +6,7 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>542</width>
+    <width>568</width>
     <height>439</height>
    </rect>
   </property>
@@ -48,6 +48,20 @@
        <widget class="QLineEdit" name="t1Edit"/>
       </item>
       <item row="0" column="4">
+       <widget class="QLabel" name="label_6">
+        <property name="text">
+         <string>Memory usage</string>
+        </property>
+       </widget>
+      </item>
+      <item row="0" column="5">
+       <widget class="QLineEdit" name="memoryUsageEdit">
+        <property name="enabled">
+         <bool>false</bool>
+        </property>
+       </widget>
+      </item>
+      <item row="0" column="6">
        <widget class="QPushButton" name="startButton">
         <property name="text">
          <string>Start</string>
@@ -75,6 +89,20 @@
        <widget class="QLineEdit" name="t2Edit"/>
       </item>
       <item row="1" column="4">
+       <widget class="QLabel" name="label_5">
+        <property name="text">
+         <string>Objects count</string>
+        </property>
+       </widget>
+      </item>
+      <item row="1" column="5">
+       <widget class="QLineEdit" name="blocksCountEdit">
+        <property name="enabled">
+         <bool>false</bool>
+        </property>
+       </widget>
+      </item>
+      <item row="1" column="6">
        <widget class="QPushButton" name="stopButton">
         <property name="enabled">
          <bool>false</bool>

@@ -57,6 +57,12 @@ void MainWindow::newPointArrived(double res1, double res2, double res3, double t
     ui->plot->replot();
 }
 
+void MainWindow::usedMemoryChanged(int blocks_count, int size)
+{
+    ui->blocksCountEdit->setText(QString::number(blocks_count));
+    ui->memoryUsageEdit->setText(QString::number(size));
+}
+
 void MainWindow::on_startButton_clicked()
 {
     int block_size = ui->blockSizeEdit->text().toInt();
@@ -72,6 +78,7 @@ void MainWindow::on_startButton_clicked()
     connect(processor, SIGNAL(processorReady()), storage, SLOT(notifyAboutReadyProcessor()));
     connect(storage, SIGNAL(storageBlockReady(int*)), processor, SLOT(processData(int*)));
     connect(processor, SIGNAL(dataProcessed(double, double, double, double)), this, SLOT(newPointArrived(double, double, double, double)));
+    connect(storage, SIGNAL(changeUsedMemory(int,int)), this, SLOT(usedMemoryChanged(int,int)));
 
     xs1.clear();
     ys1.clear();
@@ -101,6 +108,7 @@ void MainWindow::on_stopButton_clicked()
     disconnect(processor, SIGNAL(processorReady()), storage, SLOT(notifyAboutReadyProcessor()));
     disconnect(storage, SIGNAL(storageBlockReady(int*)), processor, SLOT(processData(int*)));
     disconnect(processor, SIGNAL(dataProcessed(double, double, double, double)), this, SLOT(newPointArrived(double, double, double, double)));
+    disconnect(storage, SIGNAL(changeUsedMemory(int,int)), this, SLOT(usedMemoryChanged(int,int)));
     storage->quit();
     storage->wait();
 

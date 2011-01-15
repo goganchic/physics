@@ -17,6 +17,7 @@ public:
 
 signals:
     void storageBlockReady(int *ptr);
+    void changeUsedMemory(int blocks_count, int size);
 public slots:
     void cacheRawData();
     void notifyAboutReadyProcessor();
@@ -27,6 +28,7 @@ private:
     int block_size;
 
     void callProcessorIfRequired();
+    void emitUsedMemoryChanged();
 };
 
 #endif // STORAGETHREAD_H

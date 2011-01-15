@@ -37,6 +37,7 @@ private:
 
 public slots:
     void newPointArrived(double res1, double res2, double res3, double t);
+    void usedMemoryChanged(int blocks_count, int size);
 
 
 private slots:
