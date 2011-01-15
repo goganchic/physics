@@ -8,23 +8,27 @@ MainWindow::MainWindow(QWidget *parent) :
     avgCurve1("AVG(t1)"),
     avgCurve2("AVG(t2)"),
     avgCurve3("AVG(t1 + t2)"),
-    tCurve("T")
+    mtCurve("MT"),
+    dtCurve("DT")
 {
     ui->setupUi(this);
 
     avgCurve1.setPen(QPen(Qt::red));
     avgCurve2.setPen(QPen(Qt::green));
     avgCurve3.setPen(QPen(Qt::blue));
+    mtCurve.setPen(QPen(Qt::darkYellow));
 
     avgCurve1.setRenderHint(QwtPlotItem::RenderAntialiased);
     avgCurve2.setRenderHint(QwtPlotItem::RenderAntialiased);
     avgCurve3.setRenderHint(QwtPlotItem::RenderAntialiased);
-    tCurve.setRenderHint(QwtPlotItem::RenderAntialiased);
+    mtCurve.setRenderHint(QwtPlotItem::RenderAntialiased);
+    dtCurve.setRenderHint(QwtPlotItem::RenderAntialiased);
 
     avgCurve1.attach(ui->plot);
     avgCurve2.attach(ui->plot);
     avgCurve3.attach(ui->plot);
-    tCurve.attach(ui->plot);
+    mtCurve.attach(ui->plot);
+    dtCurve.attach(ui->plot);
 
     ui->plot->setAxisTitle(QwtPlot::xBottom, "time -->");
     ui->plot->setAxisTitle(QwtPlot::yLeft, "value -->");
@@ -36,7 +40,7 @@ MainWindow::~MainWindow()
     delete ui;
 }
 
-void MainWindow::newPointArrived(double res1, double res2, double res3, double t)
+void MainWindow::newPointArrived(double res1, double res2, double res3, double mt, double dt)
 {
     xs1.push_back(xs1.size());
     ys1.push_back(res1);
@@ -50,9 +54,13 @@ void MainWindow::newPointArrived(double res1, double res2, double res3, double t
     ys3.push_back(res3);
     avgCurve3.setData(&xs3[0], &ys3[0], xs3.size());
 
-    xst.push_back(xst.size());
-    yst.push_back(t);
-    tCurve.setData(&xst[0], &yst[0], xst.size());
+    xsmt.push_back(xsmt.size());
+    ysmt.push_back(mt);
+    mtCurve.setData(&xsmt[0], &ysmt[0], xsmt.size());
+
+    xsdt.push_back(xsdt.size());
+    ysdt.push_back(dt);
+    dtCurve.setData(&xsdt[0], &ysdt[0], xsdt.size());
 
     ui->plot->replot();
 }
@@ -77,7 +85,7 @@ void MainWindow::on_startButton_clicked()
     connect(generator, SIGNAL(newDataGenerated()), storage, SLOT(cacheRawData()));
     connect(processor, SIGNAL(processorReady()), storage, SLOT(notifyAboutReadyProcessor()));
     connect(storage, SIGNAL(storageBlockReady(int*)), processor, SLOT(processData(int*)));
-    connect(processor, SIGNAL(dataProcessed(double, double, double, double)), this, SLOT(newPointArrived(double, double, double, double)));
+    connect(processor, SIGNAL(dataProcessed(double, double, double, double, double)), this, SLOT(newPointArrived(double, double, double, double, double)));
     connect(storage, SIGNAL(changeUsedMemory(int,int)), this, SLOT(usedMemoryChanged(int,int)));
 
     xs1.clear();
@@ -86,8 +94,10 @@ void MainWindow::on_startButton_clicked()
     ys2.clear();
     xs3.clear();
     ys3.clear();
-    xst.clear();
-    yst.clear();
+    xsmt.clear();
+    ysmt.clear();
+    xsdt.clear();
+    ysdt.clear();
 
     processor->start();
     storage->start();
@@ -107,7 +117,7 @@ void MainWindow::on_stopButton_clicked()
     processor->wait();
     disconnect(processor, SIGNAL(processorReady()), storage, SLOT(notifyAboutReadyProcessor()));
     disconnect(storage, SIGNAL(storageBlockReady(int*)), processor, SLOT(processData(int*)));
-    disconnect(processor, SIGNAL(dataProcessed(double, double, double, double)), this, SLOT(newPointArrived(double, double, double, double)));
+    disconnect(processor, SIGNAL(dataProcessed(double, double, double, double, double)), this, SLOT(newPointArrived(double, double, double, double, double)));
     disconnect(storage, SIGNAL(changeUsedMemory(int,int)), this, SLOT(usedMemoryChanged(int,int)));
     storage->quit();
     storage->wait();

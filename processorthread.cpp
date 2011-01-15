@@ -2,7 +2,7 @@
 #include <math.h>
 
 ProcessorThread::ProcessorThread(int bs, int t_1, int t_2, QObject *parent) :
-    QThread(parent), block_size(bs), t1(t_1), t2(t_2)
+    QThread(parent), block_size(bs), t1(t_1), t2(t_2), mt(0), mt2(0), number(0)
 {
     this->moveToThread(this);
 }
@@ -47,6 +47,12 @@ void ProcessorThread::processData(int *ptr)
     k1 = (t2 - t1) / diff;
     t = k0 + k1 * x3;
 
-    emit dataProcessed(x1, x2, x3, t);
+    number++;
+    mt = mt * (number - 1) / number + t / number;
+    mt2 = mt2 * (number - 1) / number + t * t / number;
+    dt = mt2 - mt * mt;
+
+
+    emit dataProcessed(x1, x2, x3, mt, dt);
     emit processorReady();
 }

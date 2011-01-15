@@ -14,7 +14,7 @@ protected:
 
 signals:
     void processorReady();
-    void dataProcessed(double res1, double res2, double res3, double t);
+    void dataProcessed(double res1, double res2, double res3, double mt, double dt);
 
 public slots:
     void processData(int *ptr);
@@ -23,7 +23,10 @@ private:
     int block_size;
     int t1;
     int t2;
-
+    double mt;
+    double mt2;
+    double dt;
+    int number;
 };
 
 #endif // PROCESSORTHREAD_H

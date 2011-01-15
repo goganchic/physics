@@ -25,18 +25,21 @@ private:
     QwtPlotCurve avgCurve1;
     QwtPlotCurve avgCurve2;
     QwtPlotCurve avgCurve3;
-    QwtPlotCurve tCurve;
+    QwtPlotCurve mtCurve;
+    QwtPlotCurve dtCurve;
     QVector<double> xs1;
     QVector<double> ys1;
     QVector<double> xs2;
     QVector<double> ys2;
     QVector<double> xs3;
     QVector<double> ys3;
-    QVector<double> xst;
-    QVector<double> yst;
+    QVector<double> xsmt;
+    QVector<double> ysmt;
+    QVector<double> xsdt;
+    QVector<double> ysdt;
 
 public slots:
-    void newPointArrived(double res1, double res2, double res3, double t);
+    void newPointArrived(double res1, double res2, double res3, double mt, double dt);
     void usedMemoryChanged(int blocks_count, int size);
 
 
