@@ -66,28 +66,31 @@ void MainWindow::newPointArrived(double res1, double res2, double res3, double m
     ui->plot->replot();
 }
 
-void MainWindow::usedMemoryChanged(int blocks_count, int size)
+void MainWindow::usedMemoryChanged(int blocks_count, int size, int temp_buffer_position)
 {
     ui->blocksCountEdit->setText(QString::number(blocks_count));
     ui->memoryUsageEdit->setText(QString::number(size));
+    ui->tempBufferPositionEdit->setText(QString::number(temp_buffer_position));
 }
 
 void MainWindow::on_startButton_clicked()
 {
-    int block_size = ui->blockSizeEdit->text().toInt();
-    int interval = ui->intervalEdit->text().toInt();
+    int observation_time = ui->observationTimeEdit->text().toInt();
+    int device_buffer_size = ui->deviceBufferSizeEdit->text().toInt();
+    int discretization_rate = ui->discretizationRateEdit->text().toInt();
     int t1 = ui->t1Edit->text().toInt();
     int t2 = ui->t2Edit->text().toInt();
+    int interval = device_buffer_size * 1000.0 / discretization_rate;
+    int block_size = observation_time * discretization_rate;
 
-    storage = new StorageThread(block_size);
-    generator = new GeneratorThread(interval);
+    storage = new StorageThread(block_size, device_buffer_size);
     processor = new ProcessorThread(block_size, t1, t2);
 
-    connect(generator, SIGNAL(newDataGenerated()), storage, SLOT(cacheRawData()));
+    connect(&generator, SIGNAL(timeout()), storage, SLOT(cacheRawData()));
     connect(processor, SIGNAL(processorReady()), storage, SLOT(notifyAboutReadyProcessor()));
-    connect(storage, SIGNAL(storageBlockReady(int*)), processor, SLOT(processData(int*)));
+    connect(storage, SIGNAL(storageBlockReady(short*)), processor, SLOT(processData(short*)));
     connect(processor, SIGNAL(dataProcessed(double, double, double, double, double)), this, SLOT(newPointArrived(double, double, double, double, double)));
-    connect(storage, SIGNAL(changeUsedMemory(int,int)), this, SLOT(usedMemoryChanged(int,int)));
+    connect(storage, SIGNAL(changeUsedMemory(int,int, int)), this, SLOT(usedMemoryChanged(int,int, int)));
 
     xs1.clear();
     ys1.clear();
@@ -102,7 +105,7 @@ void MainWindow::on_startButton_clicked()
 
     processor->start();
     storage->start();
-    generator->start();
+    generator.start(interval);
 
     ui->startButton->setDisabled(true);
     ui->stopButton->setDisabled(false);
@@ -110,20 +113,18 @@ void MainWindow::on_startButton_clicked()
 
 void MainWindow::on_stopButton_clicked()
 {
-    generator->stop();
-    generator->wait();
-    disconnect(generator, SIGNAL(newDataGenerated()), storage, SLOT(cacheRawData()));
+    generator.stop();
+    disconnect(&generator, SIGNAL( timeout()), storage, SLOT(cacheRawData()));
 
     processor->quit();
     processor->wait();
     disconnect(processor, SIGNAL(processorReady()), storage, SLOT(notifyAboutReadyProcessor()));
-    disconnect(storage, SIGNAL(storageBlockReady(int*)), processor, SLOT(processData(int*)));
+    disconnect(storage, SIGNAL(storageBlockReady(short*)), processor, SLOT(processData(short*)));
     disconnect(processor, SIGNAL(dataProcessed(double, double, double, double, double)), this, SLOT(newPointArrived(double, double, double, double, double)));
-    disconnect(storage, SIGNAL(changeUsedMemory(int,int)), this, SLOT(usedMemoryChanged(int,int)));
+    disconnect(storage, SIGNAL(changeUsedMemory(int,int, int)), this, SLOT(usedMemoryChanged(int,int, int)));
     storage->quit();
     storage->wait();
 
-    delete generator;
     delete processor;
     delete storage;
 

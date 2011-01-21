@@ -1,9 +1,11 @@
 #include "storagethread.h"
 
-StorageThread::StorageThread(int bs, QObject *parent) :
-    QThread(parent), processor_state(PROCESSOR_READY), block_size(bs)
+StorageThread::StorageThread(int bs, int dbs, QObject *parent) :
+    QThread(parent), processor_state(PROCESSOR_READY), block_size(bs),
+    device_buffer_size(dbs), temp_buffer_position(0)
 {
     this->moveToThread(this);
+    temp_buffer = new short[block_size * 2];
 }
 
 StorageThread::~StorageThread()
@@ -13,18 +15,34 @@ StorageThread::~StorageThread()
         delete[] blocks[0];
         blocks.remove(0);
     }
+
+    delete[] temp_buffer;
 }
 
 void StorageThread::cacheRawData()
 {
     // block_size * 2 = size for t1 + size for t2
-    int *block = new int[block_size * 2];
+    short *device_buffer = new short[device_buffer_size];
+    int coping_size = 0;
 
-    // TODO copy data
-    blocks.push_back(block);
+    if (temp_buffer_position + device_buffer_size < block_size * 2)
+    {
+        copyDataToTempBuffer(device_buffer, device_buffer_size);
+    }
+    else
+    {
+        coping_size = block_size * 2 - (temp_buffer_position + device_buffer_size);
+        copyDataToTempBuffer(device_buffer, coping_size);
+        temp_buffer_position = 0;
+        blocks.push_back(temp_buffer);
+        callProcessorIfRequired();
+        temp_buffer = new short[block_size * 2];
+        copyDataToTempBuffer(device_buffer + coping_size, device_buffer_size - coping_size);
+    }
+
+    delete[] device_buffer;
+
     emitUsedMemoryChanged();
-
-    callProcessorIfRequired();
 }
 
 void StorageThread::callProcessorIfRequired()
@@ -45,5 +63,12 @@ void StorageThread::notifyAboutReadyProcessor()
 
 void StorageThread::emitUsedMemoryChanged()
 {
-    emit changeUsedMemory(blocks.size(), blocks.size() * block_size * 2);
+    // blocks count + temp buffer
+    emit changeUsedMemory(blocks.size() + 1, (blocks.size() + 1) * block_size * 2 * sizeof(short), temp_buffer_position);
+}
+
+void StorageThread::copyDataToTempBuffer(short *data, int size)
+{
+    memcpy(temp_buffer + temp_buffer_position, data, size * sizeof(short));
+    temp_buffer_position += size;
 }

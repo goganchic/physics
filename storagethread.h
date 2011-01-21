@@ -12,23 +12,27 @@ class StorageThread : public QThread
 {
     Q_OBJECT
 public:
-    explicit StorageThread(int bs, QObject *parent = 0);
+    explicit StorageThread(int bs, int dbs, QObject *parent = 0);
     ~StorageThread();
 
 signals:
-    void storageBlockReady(int *ptr);
-    void changeUsedMemory(int blocks_count, int size);
+    void storageBlockReady(short *ptr);
+    void changeUsedMemory(int blocks_count, int size, int temp_buffer_postion);
 public slots:
     void cacheRawData();
     void notifyAboutReadyProcessor();
 
 private:
-    QVector<int*> blocks;
+    QVector<short*> blocks;
     int processor_state;
     int block_size;
+    int device_buffer_size;
+    short *temp_buffer;
+    int temp_buffer_position;
 
     void callProcessorIfRequired();
     void emitUsedMemoryChanged();
+    void copyDataToTempBuffer(short *data, int size);
 };
 
 #endif // STORAGETHREAD_H

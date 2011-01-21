@@ -1,5 +1,4 @@
 #include "resultstablemodel.h"
-#include <QDebug>
 
 ResultsTableModel::ResultsTableModel(QObject *parent) :
     QAbstractTableModel(parent)
@@ -48,7 +47,6 @@ int ResultsTableModel::columnCount(const QModelIndex &parent) const
 
 QVariant ResultsTableModel::data(const QModelIndex &index, int role) const
 {
-    qDebug() << "in data";
     if (!index.isValid())
         return QVariant();
 

@@ -17,7 +17,7 @@ signals:
     void dataProcessed(double res1, double res2, double res3, double mt, double dt);
 
 public slots:
-    void processData(int *ptr);
+    void processData(short *ptr);
 
 private:
     int block_size;

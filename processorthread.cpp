@@ -12,7 +12,7 @@ void ProcessorThread::run()
     exec();
 }
 
-void ProcessorThread::processData(int *ptr)
+void ProcessorThread::processData(short *ptr)
 {
     double x1 = 0;
     double x2 = 0;

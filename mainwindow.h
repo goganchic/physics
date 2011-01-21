@@ -3,8 +3,8 @@
 
 #include <QMainWindow>
 #include <QVector>
+#include <QTimer>
 #include <qwt_plot_curve.h>
-#include "generatorthread.h"
 #include "processorthread.h"
 #include "storagethread.h"
 #include "resultswindow.h"
@@ -42,7 +42,7 @@ private:
 
 public slots:
     void newPointArrived(double res1, double res2, double res3, double mt, double dt);
-    void usedMemoryChanged(int blocks_count, int size);
+    void usedMemoryChanged(int blocks_count, int size, int temp_buffer_position);
 
 
 private slots:
@@ -50,7 +50,7 @@ private slots:
     void on_startButton_clicked();
 
 private:
-    GeneratorThread *generator;
+    QTimer generator;
     ProcessorThread *processor;
     StorageThread *storage;
 };

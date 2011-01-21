@@ -1,6 +1,5 @@
 #include "resultswindow.h"
 #include "ui_resultswindow.h"
-#include <QDebug>
 
 ResultsWindow::ResultsWindow(QWidget *parent) :
     QDialog(parent),
@@ -19,6 +18,5 @@ ResultsWindow::~ResultsWindow()
 
 void ResultsWindow::setData(QVector<double> &new_x1, QVector<double> &new_x2, QVector<double> &new_x3, QVector<double> &new_mt, QVector<double> &new_dt)
 {
-    qDebug() << "new_x1.size() = " << new_x1.size();
     model.setData(new_x1, new_x2, new_x3, new_mt, new_dt);
 }

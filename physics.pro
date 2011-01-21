@@ -30,14 +30,12 @@ win32 {
 
 SOURCES += main.cpp\
         mainwindow.cpp \
-    generatorthread.cpp \
     storagethread.cpp \
     processorthread.cpp \
     resultswindow.cpp \
     resultstablemodel.cpp
 
 HEADERS  += mainwindow.h \
-    generatorthread.h \
     storagethread.h \
     processorthread.h \
     resultswindow.h \
