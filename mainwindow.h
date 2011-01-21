@@ -3,7 +3,6 @@
 
 #include <QMainWindow>
 #include <QVector>
-#include <QTimer>
 #include <qwt_plot_curve.h>
 #include "processorthread.h"
 #include "storagethread.h"
@@ -50,7 +49,6 @@ private slots:
     void on_startButton_clicked();
 
 private:
-    QTimer generator;
     ProcessorThread *processor;
     StorageThread *storage;
 };

@@ -83,10 +83,9 @@ void MainWindow::on_startButton_clicked()
     int interval = device_buffer_size * 1000.0 / discretization_rate;
     int block_size = observation_time * discretization_rate;
 
-    storage = new StorageThread(block_size, device_buffer_size);
+    storage = new StorageThread(block_size, device_buffer_size, interval);
     processor = new ProcessorThread(block_size, t1, t2);
 
-    connect(&generator, SIGNAL(timeout()), storage, SLOT(cacheRawData()));
     connect(processor, SIGNAL(processorReady()), storage, SLOT(notifyAboutReadyProcessor()));
     connect(storage, SIGNAL(storageBlockReady(short*)), processor, SLOT(processData(short*)));
     connect(processor, SIGNAL(dataProcessed(double, double, double, double, double)), this, SLOT(newPointArrived(double, double, double, double, double)));
@@ -105,7 +104,6 @@ void MainWindow::on_startButton_clicked()
 
     processor->start();
     storage->start();
-    generator.start(interval);
 
     ui->startButton->setDisabled(true);
     ui->stopButton->setDisabled(false);
@@ -113,9 +111,6 @@ void MainWindow::on_startButton_clicked()
 
 void MainWindow::on_stopButton_clicked()
 {
-    generator.stop();
-    disconnect(&generator, SIGNAL( timeout()), storage, SLOT(cacheRawData()));
-
     processor->quit();
     processor->wait();
     disconnect(processor, SIGNAL(processorReady()), storage, SLOT(notifyAboutReadyProcessor()));

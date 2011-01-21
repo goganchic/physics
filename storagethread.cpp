@@ -1,15 +1,18 @@
 #include "storagethread.h"
 
-StorageThread::StorageThread(int bs, int dbs, QObject *parent) :
+StorageThread::StorageThread(int bs, int dbs, int ti, QObject *parent) :
     QThread(parent), processor_state(PROCESSOR_READY), block_size(bs),
-    device_buffer_size(dbs), temp_buffer_position(0)
+    device_buffer_size(dbs), temp_buffer_position(0), timer_interval(ti)
 {
     this->moveToThread(this);
     temp_buffer = new short[block_size * 2];
+    connect(&timer, SIGNAL(timeout()), this, SLOT(cacheRawData()));
 }
 
 StorageThread::~StorageThread()
 {
+    timer.stop();
+    disconnect(&timer, SIGNAL(timeout()), this, SLOT(cacheRawData()));
     while (blocks.size() > 0)
     {
         delete[] blocks[0];
@@ -17,6 +20,12 @@ StorageThread::~StorageThread()
     }
 
     delete[] temp_buffer;
+}
+
+void StorageThread::run()
+{
+    timer.start(timer_interval);
+    exec();
 }
 
 void StorageThread::cacheRawData()
