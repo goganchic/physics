@@ -192,6 +192,18 @@
    <container>1</container>
   </customwidget>
  </customwidgets>
+ <tabstops>
+  <tabstop>observationTimeEdit</tabstop>
+  <tabstop>deviceBufferSizeEdit</tabstop>
+  <tabstop>discretizationRateEdit</tabstop>
+  <tabstop>t1Edit</tabstop>
+  <tabstop>t2Edit</tabstop>
+  <tabstop>startButton</tabstop>
+  <tabstop>stopButton</tabstop>
+  <tabstop>memoryUsageEdit</tabstop>
+  <tabstop>blocksCountEdit</tabstop>
+  <tabstop>tempBufferPositionEdit</tabstop>
+ </tabstops>
  <resources/>
  <connections/>
 </ui>
