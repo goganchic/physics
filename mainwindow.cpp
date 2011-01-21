@@ -107,6 +107,7 @@ void MainWindow::on_startButton_clicked()
 
     ui->startButton->setDisabled(true);
     ui->stopButton->setDisabled(false);
+    enableInputs(false);
 }
 
 void MainWindow::on_stopButton_clicked()
@@ -125,7 +126,17 @@ void MainWindow::on_stopButton_clicked()
 
     ui->startButton->setDisabled(false);
     ui->stopButton->setDisabled(true);
+    enableInputs(true);
 
     resultsWindow.setData(ys1, ys2, ys3, ysmt, ysdt);
     resultsWindow.show();
+}
+
+void MainWindow::enableInputs(bool st)
+{
+    ui->t1Edit->setEnabled(st);
+    ui->t2Edit->setEnabled(st);
+    ui->observationTimeEdit->setEnabled(st);
+    ui->discretizationRateEdit->setEnabled(st);
+    ui->deviceBufferSizeEdit->setEnabled(st);
 }

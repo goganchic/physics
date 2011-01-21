@@ -51,6 +51,8 @@ private slots:
 private:
     ProcessorThread *processor;
     StorageThread *storage;
+
+    void enableInputs(bool st);
 };
 
 #endif // MAINWINDOW_H
