@@ -5,6 +5,7 @@ StorageThread::StorageThread(int bs, int dbs, int ti, QObject *parent) :
     device_buffer_size(dbs), temp_buffer_position(0), timer_interval(ti)
 {
     this->moveToThread(this);
+    this->timer.moveToThread(this);
     temp_buffer = new short[block_size * 2];
     connect(&timer, SIGNAL(timeout()), this, SLOT(cacheRawData()));
 }
