@@ -33,13 +33,15 @@ SOURCES += main.cpp\
     storagethread.cpp \
     processorthread.cpp \
     resultswindow.cpp \
-    resultstablemodel.cpp
+    resultstablemodel.cpp \
+    preprocessorthread.cpp
 
 HEADERS  += mainwindow.h \
     storagethread.h \
     processorthread.h \
     resultswindow.h \
-    resultstablemodel.h
+    resultstablemodel.h \
+    preprocessorthread.h
 
 FORMS    += mainwindow.ui \
     resultswindow.ui

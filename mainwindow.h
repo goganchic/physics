@@ -41,7 +41,7 @@ private:
 
 public slots:
     void newPointArrived(double res1, double res2, double res3, double mt, double dt);
-    void usedMemoryChanged(int blocks_count, int size, int temp_buffer_position);
+    void usedMemoryChanged(int preprocessor_blocks_count, int processor_blocks_count, int temp_buffer_position);
 
 
 private slots:

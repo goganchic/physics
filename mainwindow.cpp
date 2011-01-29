@@ -66,30 +66,28 @@ void MainWindow::newPointArrived(double res1, double res2, double res3, double m
     ui->plot->replot();
 }
 
-void MainWindow::usedMemoryChanged(int blocks_count, int size, int temp_buffer_position)
+void MainWindow::usedMemoryChanged(int preprocessor_blocks_count, int processor_blocks_count, int temp_buffer_position)
 {
-    ui->blocksCountEdit->setText(QString::number(blocks_count));
-    ui->memoryUsageEdit->setText(QString::number(size));
-    ui->tempBufferPositionEdit->setText(QString::number(temp_buffer_position));
+    ui->blocksCountLcd1->display(preprocessor_blocks_count);
+    ui->blocksCountLcd2->display(processor_blocks_count);
+    ui->tempBufferPositionLcd->display(temp_buffer_position);
 }
 
 void MainWindow::on_startButton_clicked()
 {
     int observation_time = ui->observationTimeEdit->text().toInt();
     int device_buffer_size = ui->deviceBufferSizeEdit->text().toInt();
+    int preprocessor_block_size = ui->preprocessorBlockSizeEdit->text().toInt();
     int discretization_rate = ui->discretizationRateEdit->text().toInt();
     int t1 = ui->t1Edit->text().toInt();
     int t2 = ui->t2Edit->text().toInt();
     int interval = device_buffer_size * 1000.0 / discretization_rate;
-    int block_size = observation_time * discretization_rate;
+    int processor_block_size = observation_time * discretization_rate / preprocessor_block_size;
 
-    storage = new StorageThread(block_size, device_buffer_size, interval);
-    processor = new ProcessorThread(block_size, t1, t2);
+    storage = new StorageThread(preprocessor_block_size, processor_block_size, device_buffer_size, interval, t1, t2);
 
-    connect(processor, SIGNAL(processorReady()), storage, SLOT(notifyAboutReadyProcessor()));
-    connect(storage, SIGNAL(storageBlockReady(short*)), processor, SLOT(processData(short*)));
-    connect(processor, SIGNAL(dataProcessed(double, double, double, double, double)), this, SLOT(newPointArrived(double, double, double, double, double)));
-    connect(storage, SIGNAL(changeUsedMemory(int,int, int)), this, SLOT(usedMemoryChanged(int,int, int)));
+    connect(storage->getProcessor(), SIGNAL(dataProcessed(double, double, double, double, double)), this, SLOT(newPointArrived(double, double, double, double, double)));
+    connect(storage, SIGNAL(changeUsedMemory(int, int, int)), this, SLOT(usedMemoryChanged(int, int, int)));
 
     xs1.clear();
     ys1.clear();
@@ -102,7 +100,6 @@ void MainWindow::on_startButton_clicked()
     xsdt.clear();
     ysdt.clear();
 
-    processor->start();
     storage->start();
 
     ui->startButton->setDisabled(true);
@@ -112,16 +109,11 @@ void MainWindow::on_startButton_clicked()
 
 void MainWindow::on_stopButton_clicked()
 {
-    processor->quit();
-    processor->wait();
-    disconnect(processor, SIGNAL(processorReady()), storage, SLOT(notifyAboutReadyProcessor()));
-    disconnect(storage, SIGNAL(storageBlockReady(short*)), processor, SLOT(processData(short*)));
-    disconnect(processor, SIGNAL(dataProcessed(double, double, double, double, double)), this, SLOT(newPointArrived(double, double, double, double, double)));
-    disconnect(storage, SIGNAL(changeUsedMemory(int,int, int)), this, SLOT(usedMemoryChanged(int,int, int)));
     storage->quit();
     storage->wait();
+    connect(storage->getProcessor(), SIGNAL(dataProcessed(double, double, double, double, double)), this, SLOT(newPointArrived(double, double, double, double, double)));
+    connect(storage, SIGNAL(changeUsedMemory(int,int, int)), this, SLOT(usedMemoryChanged(int,int, int)));
 
-    delete processor;
     delete storage;
 
     ui->startButton->setDisabled(false);
@@ -139,4 +131,5 @@ void MainWindow::enableInputs(bool st)
     ui->observationTimeEdit->setEnabled(st);
     ui->discretizationRateEdit->setEnabled(st);
     ui->deviceBufferSizeEdit->setEnabled(st);
+    ui->preprocessorBlockSizeEdit->setEnabled(st);
 }
