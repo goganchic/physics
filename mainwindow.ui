@@ -6,12 +6,12 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>814</width>
-    <height>576</height>
+    <width>539</width>
+    <height>471</height>
    </rect>
   </property>
   <property name="windowTitle">
-   <string>MainWindow</string>
+   <string>Physics</string>
   </property>
   <widget class="QWidget" name="centralWidget">
    <layout class="QVBoxLayout" name="verticalLayout">
@@ -24,116 +24,39 @@
        </sizepolicy>
       </property>
       <zorder></zorder>
+      <zorder></zorder>
      </widget>
     </item>
     <item>
      <layout class="QGridLayout" name="gridLayout">
       <item row="0" column="0">
-       <widget class="QLabel" name="label">
-        <property name="text">
-         <string>Observation time</string>
-        </property>
-       </widget>
-      </item>
-      <item row="0" column="1">
-       <widget class="QLineEdit" name="observationTimeEdit">
-        <property name="text">
-         <string>2</string>
-        </property>
-       </widget>
-      </item>
-      <item row="0" column="2">
-       <widget class="QLabel" name="label_9">
-        <property name="text">
-         <string>sec</string>
-        </property>
-       </widget>
-      </item>
-      <item row="1" column="0">
-       <widget class="QLabel" name="label_7">
-        <property name="text">
-         <string>Device buffer size</string>
-        </property>
-       </widget>
-      </item>
-      <item row="1" column="1">
-       <widget class="QLineEdit" name="deviceBufferSizeEdit">
-        <property name="text">
-         <string>1000</string>
-        </property>
-       </widget>
-      </item>
-      <item row="1" column="2">
-       <widget class="QLabel" name="label_10">
-        <property name="text">
-         <string>bytes</string>
-        </property>
-       </widget>
-      </item>
-      <item row="2" column="0">
-       <widget class="QLabel" name="label_16">
-        <property name="text">
-         <string>Preprocessor block size</string>
-        </property>
-       </widget>
-      </item>
-      <item row="2" column="1">
-       <widget class="QLineEdit" name="preprocessorBlockSizeEdit">
-        <property name="text">
-         <string>1000</string>
-        </property>
-       </widget>
-      </item>
-      <item row="2" column="2">
-       <widget class="QLabel" name="label_17">
-        <property name="text">
-         <string>bytes</string>
-        </property>
-       </widget>
-      </item>
-      <item row="0" column="6">
        <widget class="QLabel" name="label_5">
         <property name="text">
          <string>Objects count 1</string>
         </property>
        </widget>
       </item>
-      <item row="1" column="6">
+      <item row="0" column="1">
+       <widget class="QLCDNumber" name="blocksCountLcd1"/>
+      </item>
+      <item row="0" column="2">
+       <widget class="QPushButton" name="startButton">
+        <property name="text">
+         <string>Start</string>
+        </property>
+       </widget>
+      </item>
+      <item row="1" column="0">
        <widget class="QLabel" name="label_15">
         <property name="text">
          <string>Objects count 2</string>
         </property>
        </widget>
       </item>
-      <item row="2" column="6">
-       <widget class="QLabel" name="label_8">
-        <property name="text">
-         <string>Temp buffer position</string>
-        </property>
-       </widget>
+      <item row="1" column="1">
+       <widget class="QLCDNumber" name="blocksCountLcd2"/>
       </item>
-      <item row="2" column="5">
-       <widget class="QLabel" name="label_13">
-        <property name="text">
-         <string>K</string>
-        </property>
-       </widget>
-      </item>
-      <item row="1" column="5">
-       <widget class="QLabel" name="label_12">
-        <property name="text">
-         <string>K</string>
-        </property>
-       </widget>
-      </item>
-      <item row="0" column="5">
-       <widget class="QLabel" name="label_11">
-        <property name="text">
-         <string>Hz</string>
-        </property>
-       </widget>
-      </item>
-      <item row="3" column="4">
+      <item row="1" column="2">
        <widget class="QPushButton" name="stopButton">
         <property name="enabled">
          <bool>false</bool>
@@ -143,63 +66,22 @@
         </property>
        </widget>
       </item>
-      <item row="3" column="0">
-       <widget class="QLabel" name="label_2">
+      <item row="2" column="0">
+       <widget class="QLabel" name="label_8">
         <property name="text">
-         <string>Discretization rate</string>
+         <string>Temp buffer position</string>
         </property>
        </widget>
       </item>
-      <item row="3" column="1">
-       <widget class="QLineEdit" name="discretizationRateEdit">
-        <property name="text">
-         <string>2000</string>
-        </property>
-       </widget>
-      </item>
-      <item row="0" column="3">
-       <widget class="QLabel" name="label_3">
-        <property name="text">
-         <string>T1</string>
-        </property>
-       </widget>
-      </item>
-      <item row="0" column="4">
-       <widget class="QLineEdit" name="t1Edit">
-        <property name="text">
-         <string>10</string>
-        </property>
-       </widget>
-      </item>
-      <item row="1" column="3">
-       <widget class="QLabel" name="label_4">
-        <property name="text">
-         <string>T2</string>
-        </property>
-       </widget>
-      </item>
-      <item row="1" column="4">
-       <widget class="QLineEdit" name="t2Edit">
-        <property name="text">
-         <string>20</string>
-        </property>
-       </widget>
-      </item>
-      <item row="2" column="4">
-       <widget class="QPushButton" name="startButton">
-        <property name="text">
-         <string>Start</string>
-        </property>
-       </widget>
-      </item>
-      <item row="0" column="7">
-       <widget class="QLCDNumber" name="blocksCountLcd1"/>
-      </item>
-      <item row="1" column="7">
-       <widget class="QLCDNumber" name="blocksCountLcd2"/>
-      </item>
-      <item row="2" column="7">
+      <item row="2" column="1">
        <widget class="QLCDNumber" name="tempBufferPositionLcd"/>
+      </item>
+      <item row="2" column="2">
+       <widget class="QPushButton" name="settingsButton">
+        <property name="text">
+         <string>Settings</string>
+        </property>
+       </widget>
       </item>
      </layout>
     </item>
@@ -215,11 +97,6 @@
    <container>1</container>
   </customwidget>
  </customwidgets>
- <tabstops>
-  <tabstop>observationTimeEdit</tabstop>
-  <tabstop>deviceBufferSizeEdit</tabstop>
-  <tabstop>preprocessorBlockSizeEdit</tabstop>
- </tabstops>
  <resources/>
  <connections/>
 </ui>

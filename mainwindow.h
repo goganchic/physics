@@ -7,6 +7,8 @@
 #include "processorthread.h"
 #include "storagethread.h"
 #include "resultswindow.h"
+#include "configurationwindow.h"
+#include "ui_configurationwindow.h"
 
 namespace Ui {
     class MainWindow;
@@ -38,6 +40,9 @@ private:
     QVector<double> xsdt;
     QVector<double> ysdt;
     ResultsWindow resultsWindow;
+    ConfigurationWindow configurationWindow;
+    ProcessorThread *processor;
+    StorageThread *storage;
 
 public slots:
     void newPointArrived(double res1, double res2, double res3, double mt, double dt);
@@ -45,14 +50,9 @@ public slots:
 
 
 private slots:
+    void on_settingsButton_clicked();
     void on_stopButton_clicked();
     void on_startButton_clicked();
-
-private:
-    ProcessorThread *processor;
-    StorageThread *storage;
-
-    void enableInputs(bool st);
 };
 
 #endif // MAINWINDOW_H

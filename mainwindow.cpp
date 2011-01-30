@@ -10,7 +10,8 @@ MainWindow::MainWindow(QWidget *parent) :
     avgCurve3("AVG(t1 + t2)"),
     mtCurve("MT"),
     dtCurve("DT"),
-    resultsWindow(this)
+    resultsWindow(this),
+    configurationWindow(this)
 {
     ui->setupUi(this);
 
@@ -75,14 +76,12 @@ void MainWindow::usedMemoryChanged(int preprocessor_blocks_count, int processor_
 
 void MainWindow::on_startButton_clicked()
 {
-    int observation_time = ui->observationTimeEdit->text().toInt();
-    int device_buffer_size = ui->deviceBufferSizeEdit->text().toInt();
-    int preprocessor_block_size = ui->preprocessorBlockSizeEdit->text().toInt();
-    int discretization_rate = ui->discretizationRateEdit->text().toInt();
-    int t1 = ui->t1Edit->text().toInt();
-    int t2 = ui->t2Edit->text().toInt();
-    int interval = device_buffer_size * 1000.0 / discretization_rate;
-    int processor_block_size = observation_time * discretization_rate / preprocessor_block_size;
+    int device_buffer_size = configurationWindow.getUi()->deviceBufferSizeEdit->text().toInt();
+    int preprocessor_block_size = configurationWindow.getUi()->preprocessorBlockSizeEdit->text().toInt();
+    int t1 = configurationWindow.getUi()->t1Edit->text().toInt();
+    int t2 = configurationWindow.getUi()->t2Edit->text().toInt();
+    int interval = configurationWindow.getInterval();
+    int processor_block_size = configurationWindow.getProcessorBlockSize();
 
     storage = new StorageThread(preprocessor_block_size, processor_block_size, device_buffer_size, interval, t1, t2);
 
@@ -104,7 +103,7 @@ void MainWindow::on_startButton_clicked()
 
     ui->startButton->setDisabled(true);
     ui->stopButton->setDisabled(false);
-    enableInputs(false);
+    ui->settingsButton->setDisabled(true);
 }
 
 void MainWindow::on_stopButton_clicked()
@@ -118,18 +117,13 @@ void MainWindow::on_stopButton_clicked()
 
     ui->startButton->setDisabled(false);
     ui->stopButton->setDisabled(true);
-    enableInputs(true);
+    ui->settingsButton->setDisabled(false);
 
     resultsWindow.setData(ys1, ys2, ys3, ysmt, ysdt);
     resultsWindow.show();
 }
 
-void MainWindow::enableInputs(bool st)
+void MainWindow::on_settingsButton_clicked()
 {
-    ui->t1Edit->setEnabled(st);
-    ui->t2Edit->setEnabled(st);
-    ui->observationTimeEdit->setEnabled(st);
-    ui->discretizationRateEdit->setEnabled(st);
-    ui->deviceBufferSizeEdit->setEnabled(st);
-    ui->preprocessorBlockSizeEdit->setEnabled(st);
+    configurationWindow.show();
 }
