@@ -77,11 +77,11 @@ void MainWindow::usedMemoryChanged(int preprocessor_blocks_count, int processor_
 void MainWindow::on_startButton_clicked()
 {
     int device_buffer_size = configurationWindow.getUi()->deviceBufferSizeEdit->text().toInt();
-    int preprocessor_block_size = configurationWindow.getUi()->preprocessorBlockSizeEdit->text().toInt();
+    int preprocessor_block_size = configurationWindow.getPreprocessorBlockSize();
+    int processor_block_size = configurationWindow.getProcessorBlockSize();
+    int interval = configurationWindow.getInterval();
     int t1 = configurationWindow.getUi()->t1Edit->text().toInt();
     int t2 = configurationWindow.getUi()->t2Edit->text().toInt();
-    int interval = configurationWindow.getInterval();
-    int processor_block_size = configurationWindow.getProcessorBlockSize();
 
     storage = new StorageThread(preprocessor_block_size, processor_block_size, device_buffer_size, interval, t1, t2);
 

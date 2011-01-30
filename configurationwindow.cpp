@@ -1,6 +1,22 @@
 #include "configurationwindow.h"
 #include "ui_configurationwindow.h"
 #include <QIntValidator>
+#include <cmath>
+
+
+QVector<int> getDividers(int a)
+{
+    QVector<int> result;
+    for (int i = 1; i < a; i++)
+    {
+        if (a % i == 0)
+        {
+            result.push_back(i);
+        }
+    }
+
+    return result;
+}
 
 ConfigurationWindow::ConfigurationWindow(QWidget *parent) :
     QDialog(parent),
@@ -26,6 +42,7 @@ ConfigurationWindow::ConfigurationWindow(QWidget *parent) :
     QValidator *t2_val = new QIntValidator(1, 10000, ui->t2Edit);
     ui->t2Edit->setValidator(t2_val);
 
+    updatePreprocessorBlockSize();
     updateProcessorBlockSize();
     updateInterval();
 }
@@ -40,13 +57,14 @@ void ConfigurationWindow::on_okButton_clicked()
     close();
 }
 
+int ConfigurationWindow::getPreprocessorBlockSize()
+{
+    return ui->observationTimeEdit->text().toInt() * ui->discretizationRateEdit->text().toInt() / getX();
+}
+
 int ConfigurationWindow::getProcessorBlockSize()
 {
-    int observation_time = ui->observationTimeEdit->text().toInt();
-    int preprocessor_block_size = ui->preprocessorBlockSizeEdit->text().toInt();
-    int discretization_rate = ui->discretizationRateEdit->text().toInt();
-
-    return observation_time * discretization_rate / preprocessor_block_size;
+    return getX();
 }
 
 int ConfigurationWindow::getInterval()
@@ -66,9 +84,14 @@ void ConfigurationWindow::updateProcessorBlockSize()
     ui->processorBlockSizeEdit->setText(QString::number(getProcessorBlockSize()) + " x 2");
 }
 
+void ConfigurationWindow::updatePreprocessorBlockSize()
+{
+    ui->preprocessorBlockSizeEdit->setText(QString::number(getPreprocessorBlockSize()));
+}
 
 void ConfigurationWindow::on_observationTimeEdit_textEdited(QString )
 {
+    updatePreprocessorBlockSize();
     updateProcessorBlockSize();
 }
 
@@ -78,12 +101,28 @@ void ConfigurationWindow::on_deviceBufferSizeEdit_textChanged(QString )
     updateInterval();
 }
 
-void ConfigurationWindow::on_preprocessorBlockSizeEdit_textChanged(QString )
-{
-    updateProcessorBlockSize();
-}
-
 void ConfigurationWindow::on_discretizationRateEdit_textChanged(QString )
 {
+    updatePreprocessorBlockSize();
+    updateProcessorBlockSize();
     updateInterval();
 }
+
+int ConfigurationWindow::getX()
+{
+    int n = ui->observationTimeEdit->text().toInt() * ui->discretizationRateEdit->text().toInt();
+    int x = sqrt(n);
+    QVector<int> dividers = getDividers(n);
+    int optimum_x = dividers[0];
+
+    for (int i = 0; i < dividers.size(); i++)
+    {
+        if (abs(x - dividers[i]) < abs(x - optimum_x))
+        {
+            optimum_x = dividers[i];
+        }
+    }
+
+    return optimum_x;
+}
+
