@@ -66,21 +66,26 @@ void StorageThread::cacheRawData()
 {
     short *device_buffer = new short[device_buffer_size];
     int coping_size = 0;
+    int coping_position = 0;
 
-    if (temp_preprocessor_buffer_position + device_buffer_size < preprocessor_block_size)
+    do
     {
-        copyDataToTempBuffer(device_buffer, device_buffer_size);
-    }
-    else
-    {
-        coping_size = preprocessor_block_size - temp_preprocessor_buffer_position;
-        copyDataToTempBuffer(device_buffer, coping_size);
-        temp_preprocessor_buffer_position = 0;
-        preprocessor_blocks.push_back(temp_preprocessor_buffer);
-        callPreprocessorIfRequired();
-        temp_preprocessor_buffer = new short[preprocessor_block_size];
-        copyDataToTempBuffer(device_buffer + coping_size, device_buffer_size - coping_size);
-    }
+        int available_memory = preprocessor_block_size - temp_preprocessor_buffer_position;
+        int left_copy = device_buffer_size - coping_position;
+
+        coping_size = left_copy < available_memory ? left_copy : available_memory;
+        copyDataToTempBuffer(device_buffer + coping_position, coping_size);
+
+        if (temp_preprocessor_buffer_position == preprocessor_block_size)
+        {
+            temp_preprocessor_buffer_position = 0;
+            preprocessor_blocks.push_back(temp_preprocessor_buffer);
+            callPreprocessorIfRequired();
+            temp_preprocessor_buffer = new short[preprocessor_block_size];
+        }
+
+        coping_position += coping_size;
+    } while (coping_size != 0);
 
     delete[] device_buffer;
 
